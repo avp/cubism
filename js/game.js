@@ -5,7 +5,11 @@
 define(function(require) {
   'use strict';
 
-  var Game = {};
+  var C = require('constants');
+
+  var Game = {
+    keysDown: {}
+  };
 
   Game.start = function() {
     var w = window.innerWidth;
@@ -33,10 +37,25 @@ define(function(require) {
     var cubeMat = new THREE.MeshLambertMaterial({color: 0x007700});
     cubeMat.side = THREE.DoubleSide;
     var cube = new THREE.Mesh(cubeGeo, cubeMat);
-    cube.castShadow = cube.recieveShadow = true;
-    cube.position.set(0, 0, 0);
+    cube.castShadow = cube.receiveShadow = true;
+    cube.position.set(0, 2.5, 0);
     Game.scene.add(cube);
     Game.cube = cube;
+
+    var floorGeo = new THREE.CubeGeometry(10000, 0.1, 10000);
+    var floorMat = new THREE.MeshLambertMaterial({color: 0x666666});
+    floorMat.side = THREE.DoubleSide;
+    var floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.receiveShadow = true;
+    floor.position.set(0, 0, 0);
+    Game.scene.add(floor);
+
+    window.onkeydown = function(k) {
+      Game.keysDown[k.which] = true;
+    };
+    window.onkeyup = function(k) {
+      Game.keysDown[k.which] = false;
+    };
 
     document.getElementById('webgl').appendChild(Game.renderer.domElement);
     requestAnimationFrame(_.bind(Game.render, Game));
@@ -44,7 +63,12 @@ define(function(require) {
 
   Game.render = function() {
     Game.renderer.render(Game.scene, Game.camera);
-    Game.cube.rotateOnAxis(new THREE.Vector3(0, 1, 0), 0.01);
+    if (Game.keysDown[65]) {
+      Game.cube.rotateOnAxis(new THREE.Vector3(0, 1, 0), C.TURN_RATE);
+    }
+    if (Game.keysDown[68]) {
+      Game.cube.rotateOnAxis(new THREE.Vector3(0, 1, 0), -C.TURN_RATE);
+    }
     requestAnimationFrame(_.bind(Game.render, Game));
   };
 
