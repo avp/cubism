@@ -7,6 +7,7 @@ define(function(require) {
 
   var C = require('constants');
   var Cube = require('cube');
+  var Obstacle = require('obstacle');
 
   var Game = {
     keysDown: {}
@@ -56,10 +57,18 @@ define(function(require) {
     Game.cube = new Cube(Game.scene, 0, 0, 0, 5, {color: 0x007700});
     Game.cube.mesh.add(Game.camera);
 
-    new Cube(Game.scene, 20, 20, 0, 5, {color: 0xff0000});
-    new Cube(Game.scene, -20, 20, 0, 5, {color: 0xff0000});
-    new Cube(Game.scene, 20, -20, 0, 5, {color: 0xff0000});
-    new Cube(Game.scene, -20, -20, 0, 5, {color: 0xff0000});
+    Game.obstacles = [];
+    for (var i = 0; i < 4; i++) {
+      Game.obstacles.push(new Obstacle(Game.scene));
+    }
+
+    var floorGeo = new THREE.CubeGeometry(2*C.ARENA_SIZE+5, 2*C.ARENA_SIZE+5, 0.1);
+    var floorMat = new THREE.MeshLambertMaterial({color: 0x010101});
+    floorMat.side = THREE.DoubleSide;
+    var floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.position.set(0, 0, -2.5);
+    Game.scene.add(floor);
+
 
     window.onkeydown = function(k) {
       Game.keysDown[k.which] = true;
@@ -74,17 +83,21 @@ define(function(require) {
 
   Game.render = function() {
     if (Game.keysDown[65]) {
-      Game.cube.mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), C.TURN_RATE);
+      Game.cube.turnLeft();
     }
     if (Game.keysDown[68]) {
-      Game.cube.mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), -C.TURN_RATE);
+      Game.cube.turnRight();
     }
     if (Game.keysDown[87]) {
-      Game.cube.mesh.translateOnAxis(Game.cube.mesh.up, C.MOVE_SPEED);
+      Game.cube.moveForward();
     }
     if (Game.keysDown[83]) {
-      Game.cube.mesh.translateOnAxis(Game.cube.mesh.up, -C.MOVE_SPEED);
+      Game.cube.moveBackward();
     }
+
+    _.forEach(Game.obstacles, function(obstacle) {
+      obstacle.move();
+    });
 
     Game.renderer.render(Game.scene, Game.camera);
     requestAnimationFrame(_.bind(Game.render, Game));

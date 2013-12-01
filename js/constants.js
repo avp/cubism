@@ -7,8 +7,10 @@ define(function(require) {
 
   var C = {};
 
-  C.TURN_RATE = 0.03;
-  C.MOVE_SPEED = 0.3;
+  C.TURN_RATE = 0.06;
+  C.MOVE_SPEED = 1;
+
+  C.ARENA_SIZE = 100;
 
   console.log(C);
   return C;
