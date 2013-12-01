@@ -44,8 +44,8 @@ define(function(require) {
     var h = window.innerHeight;
 
     Game.scene = new THREE.Scene();
-    Game.camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100000);
-    Game.camera.position.set(0, -70, 20);
+    Game.camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 100000);
+    Game.camera.position.set(0, -90, 60);
     Game.camera.up.set(0, 1, 0);
     Game.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
@@ -54,21 +54,20 @@ define(function(require) {
 
     initLights();
 
-    Game.cube = new Cube(Game.scene, 0, 0, 0, 5, {color: 0x007700});
+    Game.cube = new Cube(Game.scene, 0, 0, 0, C.CUBE_SIZE, {color: 0x007700});
     Game.cube.mesh.add(Game.camera);
 
     Game.obstacles = [];
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 8; i++) {
       Game.obstacles.push(new Obstacle(Game.scene));
     }
 
-    var floorGeo = new THREE.CubeGeometry(2*C.ARENA_SIZE+5, 2*C.ARENA_SIZE+5, 0.1);
+    var floorGeo = new THREE.CubeGeometry(C.FLOOR_SIZE, C.FLOOR_SIZE, 0.1);
     var floorMat = new THREE.MeshLambertMaterial({color: 0x010101});
     floorMat.side = THREE.DoubleSide;
     var floor = new THREE.Mesh(floorGeo, floorMat);
     floor.position.set(0, 0, -2.5);
     Game.scene.add(floor);
-
 
     window.onkeydown = function(k) {
       Game.keysDown[k.which] = true;

@@ -8,7 +8,7 @@ define(function(require) {
   var C = require('constants');
 
   function Cube(scene, x, y, z, size, params) {
-    size = size || 5;
+    size = size || C.CUBE_SIZE;
     var cubeGeo = new THREE.CubeGeometry(size, size, size);
     var cubeMat = new THREE.MeshLambertMaterial(params);
     cubeMat.side = THREE.DoubleSide;
@@ -22,13 +22,6 @@ define(function(require) {
     var min = new THREE.Vector3(-C.ARENA_SIZE, -C.ARENA_SIZE, 0);
     var max = new THREE.Vector3(C.ARENA_SIZE, C.ARENA_SIZE, 0);
     this.mesh.position.clamp(min, max);
-  };
-
-  Cube.prototype.cameraPosition = function() {
-    var pos = this.mesh.position;
-    var up = this.mesh.up.clone();
-    var p = up.setLength(30).negate().add(pos).add(new THREE.Vector3(0, 0, 30));
-    return p;
   };
 
   Cube.prototype.turnLeft = function() {
