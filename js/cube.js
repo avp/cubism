@@ -19,6 +19,9 @@ define(function(require) {
     this.mesh = cube;
   }
 
+  /**
+   * Moves this cube to be inside the arena.
+   */
   Cube.prototype.clamp = function() {
     var min = new THREE.Vector3(-C.ARENA_SIZE, -C.ARENA_SIZE, 0);
     var max = new THREE.Vector3(C.ARENA_SIZE, C.ARENA_SIZE, 0);
@@ -45,16 +48,22 @@ define(function(require) {
     this.clamp();
   };
 
+  /**
+   * Moves the cube to a random space in the C.ARENA_SIZE.
+   */
   Cube.prototype.teleport = function() {
     var x = Util.random(-C.ARENA_SIZE, C.ARENA_SIZE);
     var y = Util.random(-C.ARENA_SIZE, C.ARENA_SIZE);
     this.mesh.position.set(x, y, 0);
   };
 
+  /**
+   * Returns true if this cube intersects with other, and false otherwise.
+   * REQUIRES: the size of both cubes is C.CUBE_SIZE
+   */
   Cube.prototype.intersects = function(other) {
     var pos1 = this.mesh.position;
     var pos2 = other.mesh.position;
-
     return pos1.distanceTo(pos2) < (Math.sqrt(2) * C.CUBE_SIZE / 1.5);
   };
 

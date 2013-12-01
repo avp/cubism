@@ -47,7 +47,7 @@ define(function(require) {
 
     Game.scene = new THREE.Scene();
     Game.camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 100000);
-    Game.camera.position.set(0, -90, 60);
+    Game.camera.position.set(0, -80, 80);
     Game.camera.up.set(0, 1, 0);
     Game.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
@@ -61,6 +61,15 @@ define(function(require) {
 
     Game.target = new Cube(Game.scene, 0, 0, 0, {color: 0x000088});
     Game.target.teleport();
+
+    var navGeo = new THREE.CylinderGeometry(0, 1, 10, 20, false);
+    var navMat = new THREE.MeshLambertMaterial({color: 0x000088});
+    var nav = new THREE.Mesh(navGeo, navMat);
+    nav.position.set(0, 0, 50);
+    nav.lookAt(Game.target.mesh.position.clone().setZ(50));
+    nav.rotateOnAxis(new THREE.Vector3(1,0,0), Math.PI / 2);
+    Game.scene.add(nav);
+    Game.nav = nav;
 
     var floorGeo = new THREE.CubeGeometry(C.FLOOR_SIZE, C.FLOOR_SIZE, 0.1);
     var floorMat = new THREE.MeshLambertMaterial({color: 0x010101});
@@ -81,16 +90,16 @@ define(function(require) {
   };
 
   Game.render = function() {
-    if (Game.keysDown[65]) {
+    if (Game.keysDown[C.KEY_LEFT]) {
       Game.hero.turnLeft();
     }
-    if (Game.keysDown[68]) {
+    if (Game.keysDown[C.KEY_RIGHT]) {
       Game.hero.turnRight();
     }
-    if (Game.keysDown[87]) {
+    if (Game.keysDown[C.KEY_FORWARD]) {
       Game.hero.moveForward();
     }
-    if (Game.keysDown[83]) {
+    if (Game.keysDown[C.KEY_BACKWARD]) {
       Game.hero.moveBackward();
     }
 
@@ -109,6 +118,11 @@ define(function(require) {
         document.getElementById('score').innerHTML = Game.score;
       }
     });
+
+    Game.nav.position.x = Game.hero.mesh.position.x;
+    Game.nav.position.y = Game.hero.mesh.position.y;
+    Game.nav.lookAt(Game.target.mesh.position.clone().setZ(50));
+    Game.nav.rotateOnAxis(new THREE.Vector3(1,0,0), Math.PI / 2);
 
     if (Game.hero.intersects(Game.target)) {
       Game.target.teleport();

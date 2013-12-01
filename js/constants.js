@@ -14,5 +14,11 @@ define(function(require) {
   C.ARENA_SIZE = 100;
   C.FLOOR_SIZE = 2 * C.ARENA_SIZE + C.CUBE_SIZE;
 
+  // Key mappings
+  C.KEY_LEFT = 65;
+  C.KEY_RIGHT = 68;
+  C.KEY_FORWARD = 87;
+  C.KEY_BACKWARD = 83;
+
   return C;
 });
