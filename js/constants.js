@@ -3,7 +3,13 @@
  */
 
 define(function(require) {
-  return {
-    TURN_RATE: 0.02
-  };
+  'use strict';
+
+  var C = {};
+
+  C.TURN_RATE = 0.03;
+  C.MOVE_SPEED = 0.3;
+
+  console.log(C);
+  return C;
 });
