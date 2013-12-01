@@ -14,6 +14,5 @@ define(function(require) {
   C.ARENA_SIZE = 100;
   C.FLOOR_SIZE = 2 * C.ARENA_SIZE + C.CUBE_SIZE;
 
-  console.log(C);
   return C;
 });

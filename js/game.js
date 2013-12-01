@@ -10,7 +10,9 @@ define(function(require) {
   var Obstacle = require('obstacle');
 
   var Game = {
-    keysDown: {}
+    keysDown: {},
+    score: 0,
+    obstacles: []
   };
 
   var initLights = function() {
@@ -54,13 +56,11 @@ define(function(require) {
 
     initLights();
 
-    Game.cube = new Cube(Game.scene, 0, 0, 0, C.CUBE_SIZE, {color: 0x007700});
-    Game.cube.mesh.add(Game.camera);
+    Game.hero = new Cube(Game.scene, 0, 0, 0, {color: 0x007700});
+    Game.hero.mesh.add(Game.camera);
 
-    Game.obstacles = [];
-    for (var i = 0; i < 8; i++) {
-      Game.obstacles.push(new Obstacle(Game.scene));
-    }
+    Game.target = new Cube(Game.scene, 0, 0, 0, {color: 0x000088});
+    Game.target.teleport();
 
     var floorGeo = new THREE.CubeGeometry(C.FLOOR_SIZE, C.FLOOR_SIZE, 0.1);
     var floorMat = new THREE.MeshLambertMaterial({color: 0x010101});
@@ -82,21 +82,40 @@ define(function(require) {
 
   Game.render = function() {
     if (Game.keysDown[65]) {
-      Game.cube.turnLeft();
+      Game.hero.turnLeft();
     }
     if (Game.keysDown[68]) {
-      Game.cube.turnRight();
+      Game.hero.turnRight();
     }
     if (Game.keysDown[87]) {
-      Game.cube.moveForward();
+      Game.hero.moveForward();
     }
     if (Game.keysDown[83]) {
-      Game.cube.moveBackward();
+      Game.hero.moveBackward();
     }
 
     _.forEach(Game.obstacles, function(obstacle) {
       obstacle.move();
+      if (Game.hero.intersects(obstacle)) {
+        alert('Game Over!\nScore: ' + Game.score);
+        _.forEach(Game.obstacles, function(obstacle) {
+          Game.scene.remove(obstacle.mesh);
+        });
+        Game.obstacles = [];
+        Game.keysDown = {};
+        Game.hero.mesh.position.set(0, 0, 0);
+        Game.target.teleport();
+        Game.score = 0;
+        document.getElementById('score').innerHTML = Game.score;
+      }
     });
+
+    if (Game.hero.intersects(Game.target)) {
+      Game.target.teleport();
+      Game.score++;
+      document.getElementById('score').innerHTML = Game.score;
+      Game.obstacles.push(new Obstacle(Game.scene));
+    }
 
     Game.renderer.render(Game.scene, Game.camera);
     requestAnimationFrame(_.bind(Game.render, Game));

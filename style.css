@@ -4,3 +4,14 @@ body {
   background: black;
   overflow: hidden;
 }
+
+#hud {
+  background: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 10px 20px;
+  color: white;
+  font-size: 30px;
+  font-family: monospace;
+}

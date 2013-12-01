@@ -6,9 +6,10 @@ define(function(require) {
   'use strict';
 
   var C = require('constants');
+  var Util = require('util');
 
-  function Cube(scene, x, y, z, size, params) {
-    size = size || C.CUBE_SIZE;
+  function Cube(scene, x, y, z, params) {
+    var size = C.CUBE_SIZE;
     var cubeGeo = new THREE.CubeGeometry(size, size, size);
     var cubeMat = new THREE.MeshLambertMaterial(params);
     cubeMat.side = THREE.DoubleSide;
@@ -42,6 +43,19 @@ define(function(require) {
   Cube.prototype.moveBackward = function() {
     this.mesh.translateOnAxis(this.mesh.up, -C.MOVE_SPEED);
     this.clamp();
+  };
+
+  Cube.prototype.teleport = function() {
+    var x = Util.random(-C.ARENA_SIZE, C.ARENA_SIZE);
+    var y = Util.random(-C.ARENA_SIZE, C.ARENA_SIZE);
+    this.mesh.position.set(x, y, 0);
+  };
+
+  Cube.prototype.intersects = function(other) {
+    var pos1 = this.mesh.position;
+    var pos2 = other.mesh.position;
+
+    return pos1.distanceTo(pos2) < (Math.sqrt(2) * C.CUBE_SIZE / 1.5);
   };
 
   return Cube;
