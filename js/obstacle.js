@@ -10,7 +10,7 @@ define(function(require) {
 
   function Obstacle(scene) {
     var cubeGeo = new THREE.CubeGeometry(5, 5, 5);
-    var cubeMat = new THREE.MeshLambertMaterial({color: 0xff0000});
+    var cubeMat = new THREE.MeshLambertMaterial({color: 0xaa0000});
     cubeMat.side = THREE.DoubleSide;
     var cube = new THREE.Mesh(cubeGeo, cubeMat);
 

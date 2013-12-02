@@ -5,9 +5,12 @@ body {
   overflow: hidden;
 }
 
+#score {
+  margin-left: 20px;
+}
+
 #hud {
-  background: #000088;
-  background: rgba(0, 0, 100, 0.6);
+  background: rgba(0, 120, 150, 0.5);
   text-align: center;
   position: fixed;
   top: 10px;
@@ -15,8 +18,8 @@ body {
   padding: 10px 30px;
   color: white;
   font-size: 20px;
-  font-family: monospace;
+  font-family: 'Electrolize', monospace;
   font-variant: small-caps;
   text-transform: uppercase;
-  border: 1px solid white;
+  border-radius: 8px;
 }
