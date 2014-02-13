@@ -63,7 +63,7 @@ define(function(require) {
     Game.target.teleport();
 
     var navGeo = new THREE.CylinderGeometry(0, 1, 10, 20, false);
-    var navMat = new THREE.MeshLambertMaterial({color: 0x000088});
+    var navMat = new THREE.MeshPhongMaterial({color: 0x000088});
     var nav = new THREE.Mesh(navGeo, navMat);
     nav.position.set(0, 0, 50);
     nav.lookAt(Game.target.mesh.position.clone().setZ(50));
