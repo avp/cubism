@@ -9,7 +9,7 @@ define(function(require) {
   var Util = require('util');
 
   function Obstacle(scene) {
-    var cubeGeo = new THREE.CubeGeometry(5, 5, 5);
+    var cubeGeo = new THREE.CubeGeometry(C.CUBE_SIZE, C.CUBE_SIZE, C.CUBE_SIZE);
     var cubeMat = new THREE.MeshLambertMaterial({color: 0xaa0000});
     cubeMat.side = THREE.DoubleSide;
     var cube = new THREE.Mesh(cubeGeo, cubeMat);
@@ -21,8 +21,6 @@ define(function(require) {
     scene.add(cube);
     this.mesh = cube;
 
-    var dx = Math.random();
-    var dy = Math.sqrt(1 - dx*dx);
     this.direction = new THREE.Vector3(Math.random(), Math.random(), 0).normalize();
   }
 

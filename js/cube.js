@@ -59,12 +59,24 @@ define(function(require) {
 
   /**
    * Returns true if this cube intersects with other, and false otherwise.
-   * REQUIRES: the size of both cubes is C.CUBE_SIZE
    */
   Cube.prototype.intersects = function(other) {
-    var pos1 = this.mesh.position;
-    var pos2 = other.mesh.position;
-    return pos1.distanceTo(pos2) < (Math.sqrt(2) * C.CUBE_SIZE / 1.5);
+    var c1 = {
+      left: this.mesh.position.x,
+      right: this.mesh.position.x + this.mesh.geometry.width,
+      bottom: this.mesh.position.y,
+      top: this.mesh.position.y + this.mesh.geometry.height
+    };
+    var c2 = {
+      left: other.mesh.position.x,
+      right: other.mesh.position.x + other.mesh.geometry.width,
+      bottom: other.mesh.position.y,
+      top: other.mesh.position.y + other.mesh.geometry.height
+    };
+    return !(c1.left > c2.right ||
+             c2.left > c1.right ||
+             c1.bottom > c2.top ||
+             c2.bottom > c1.top);
   };
 
   return Cube;
