@@ -21,16 +21,18 @@ define(function(require) {
     scene.add(cube);
     this.mesh = cube;
 
-    this.direction = Math.random() > 0.5 ? new THREE.Vector3(1, 0, 0) : new THREE.Vector3(0, 1, 0);
+    var dx = Math.random();
+    var dy = Math.sqrt(1 - dx*dx);
+    this.direction = new THREE.Vector3(Math.random(), Math.random(), 0).normalize();
   }
 
   Obstacle.prototype.move = function() {
     this.mesh.translateOnAxis(this.direction, C.MOVE_SPEED);
     if (this.mesh.position.x < -C.ARENA_SIZE || this.mesh.position.x > C.ARENA_SIZE) {
-      this.direction.negate();
+      this.direction.setX(-this.direction.x);
     }
     if (this.mesh.position.y < -C.ARENA_SIZE || this.mesh.position.y > C.ARENA_SIZE) {
-      this.direction.negate();
+      this.direction.setY(-this.direction.y);
     }
   };
 
