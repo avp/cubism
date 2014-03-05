@@ -90,16 +90,16 @@ define(function(require) {
   };
 
   Game.render = function() {
-    if (Game.keysDown[C.KEY_LEFT]) {
+    if (Game.keysDown[C.KEY_LEFT] || Game.keysDown['37']) {
       Game.hero.turnLeft();
     }
-    if (Game.keysDown[C.KEY_RIGHT]) {
+    if (Game.keysDown[C.KEY_RIGHT] || Game.keysDown['39']) {
       Game.hero.turnRight();
     }
-    if (Game.keysDown[C.KEY_FORWARD]) {
+    if (Game.keysDown[C.KEY_FORWARD] || Game.keysDown['38']) {
       Game.hero.moveForward();
     }
-    if (Game.keysDown[C.KEY_BACKWARD]) {
+    if (Game.keysDown[C.KEY_BACKWARD] || Game.keysDown['40']) {
       Game.hero.moveBackward();
     }
 
