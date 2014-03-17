@@ -10,6 +10,7 @@ body {
 }
 
 #hud {
+  background: rgb(0, 120, 150);
   background: rgba(0, 120, 150, 0.5);
   text-align: center;
   position: fixed;
