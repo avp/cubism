@@ -106,6 +106,12 @@ define(function(require) {
     _.forEach(Game.obstacles, function(obstacle) {
       obstacle.move();
       if (Game.hero.intersects(obstacle)) {
+        ga('send', {
+          hitType: 'event',
+          eventCategory: 'Game',
+          eventAction: 'Game Over',
+          eventValue: Game.score
+        });
         alert('Game Over!\nScore: ' + Game.score);
         _.forEach(Game.obstacles, function(obstacle) {
           Game.scene.remove(obstacle.mesh);
