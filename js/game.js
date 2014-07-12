@@ -110,6 +110,7 @@ define(function(require) {
           hitType: 'event',
           eventCategory: 'Game',
           eventAction: 'Game Over',
+          eventLabel: Game.score.toString(),
           eventValue: Game.score
         });
         alert('Game Over!\nScore: ' + Game.score);
