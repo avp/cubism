@@ -1,5 +1,6 @@
+sudo: false
 script:
-- echo Deploying
+  - echo Deploying
 deploy:
   provider: s3
   access_key_id: AKIAIZ2PRWDM2DDIKT2Q
