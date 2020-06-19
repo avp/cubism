@@ -83,7 +83,7 @@ Game.start = function() {
   };
 
   document.getElementById('webgl').appendChild(Game.renderer.domElement);
-  requestAnimationFrame(_.bind(Game.render, Game));
+  requestAnimationFrame(() => Game.render());
 };
 
 Game.render = function() {
@@ -100,7 +100,7 @@ Game.render = function() {
     Game.hero.moveBackward();
   }
 
-  _.forEach(Game.obstacles, function(obstacle) {
+  Game.obstacles.forEach(function(obstacle) {
     obstacle.move();
     if (Game.hero.intersects(obstacle)) {
       ga('send', {
@@ -111,7 +111,7 @@ Game.render = function() {
         eventValue: Game.score
       });
       alert('Game Over!\nScore: ' + Game.score);
-      _.forEach(Game.obstacles, function(obstacle) {
+      Game.obstacles.forEach(function(obstacle) {
         Game.scene.remove(obstacle.mesh);
       });
       Game.obstacles = [];
@@ -136,7 +136,7 @@ Game.render = function() {
   }
 
   Game.renderer.render(Game.scene, Game.camera);
-  requestAnimationFrame(_.bind(Game.render, Game));
+  requestAnimationFrame(() => Game.render());
 };
 
 export default Game;
