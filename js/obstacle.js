@@ -7,13 +7,13 @@ import {random} from './util.js';
 
 class Obstacle {
   constructor(scene) {
-    var cubeGeo = new THREE.CubeGeometry(C.CUBE_SIZE, C.CUBE_SIZE, C.CUBE_SIZE);
-    var cubeMat = new THREE.MeshLambertMaterial({color: 0xaa0000});
+    const cubeGeo = new THREE.CubeGeometry(C.CUBE_SIZE, C.CUBE_SIZE, C.CUBE_SIZE);
+    const cubeMat = new THREE.MeshLambertMaterial({color: 0xaa0000});
     cubeMat.side = THREE.DoubleSide;
-    var cube = new THREE.Mesh(cubeGeo, cubeMat);
+    const cube = new THREE.Mesh(cubeGeo, cubeMat);
 
-    var x = random(-C.ARENA_SIZE, C.ARENA_SIZE);
-    var y = random(-C.ARENA_SIZE, C.ARENA_SIZE);
+    const x = random(-C.ARENA_SIZE, C.ARENA_SIZE);
+    const y = random(-C.ARENA_SIZE, C.ARENA_SIZE);
 
     cube.position.set(x, y, 0);
     scene.add(cube);

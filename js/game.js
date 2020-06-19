@@ -9,36 +9,75 @@ import Obstacle from './obstacle.js';
 const Game = {
   keysDown: {},
   score: 0,
-  obstacles: []
+  obstacles: [],
+  scene: null,
+  renderer: null,
 };
 
 function initLights() {
-  let dirLight;
-  dirLight = new THREE.SpotLight(0xffffff);
-  dirLight.position = new THREE.Vector3(1000, 1000, 10000);
-  dirLight.intensity = 3;
-  dirLight.lookAt(new THREE.Vector3(0, 0, 0));
-  Game.scene.add(dirLight);
-  dirLight = new THREE.SpotLight(0xffffff);
-  dirLight.position = new THREE.Vector3(1000, -1000, 10000);
-  dirLight.intensity = 3;
-  dirLight.lookAt(new THREE.Vector3(0, 0, 0));
-  Game.scene.add(dirLight);
-  dirLight = new THREE.SpotLight(0xffffff);
-  dirLight.position = new THREE.Vector3(-1000, 1000, 10000);
-  dirLight.intensity = 3;
-  dirLight.lookAt(new THREE.Vector3(0, 0, 0));
-  Game.scene.add(dirLight);
-  dirLight = new THREE.SpotLight(0xffffff);
-  dirLight.position = new THREE.Vector3(-1000, -1000, 10000);
-  dirLight.intensity = 3;
-  dirLight.lookAt(new THREE.Vector3(0, 0, 0));
-  Game.scene.add(dirLight);
-
+  const positions = [
+    new THREE.Vector3(1000, 1000, 10000),
+    new THREE.Vector3(1000, -1000, 10000),
+    new THREE.Vector3(-1000, 1000, 10000),
+    new THREE.Vector3(-1000, -1000, 10000),
+  ];
+  for (const pos of positions) {
+    const dirLight = new THREE.SpotLight(0xffffff);
+    dirLight.position = pos;
+    dirLight.intensity = 3;
+    dirLight.lookAt(new THREE.Vector3(0, 0, 0));
+    Game.scene.add(dirLight);
+  }
   Game.scene.add(new THREE.AmbientLight(0x111111));
 };
 
-Game.start = function() {
+function render() {
+  if (Game.keysDown[C.KEY_LEFT] || Game.keysDown['37']) {
+    Game.hero.turnLeft();
+  }
+  if (Game.keysDown[C.KEY_RIGHT] || Game.keysDown['39']) {
+    Game.hero.turnRight();
+  }
+  if (Game.keysDown[C.KEY_FORWARD] || Game.keysDown['38']) {
+    Game.hero.moveForward();
+  }
+  if (Game.keysDown[C.KEY_BACKWARD] || Game.keysDown['40']) {
+    Game.hero.moveBackward();
+  }
+
+  Game.obstacles.forEach((obstacle) => {
+    obstacle.move();
+    if (Game.hero.intersects(obstacle)) {
+      alert('Game Over!\nScore: ' + Game.score);
+      Game.obstacles.forEach((obstacle) => {
+        Game.scene.remove(obstacle.mesh);
+      });
+      Game.obstacles = [];
+      Game.keysDown = {};
+      Game.hero.mesh.position.set(0, 0, 0);
+      Game.target.teleport();
+      Game.score = 0;
+      document.getElementById('score').innerHTML = Game.score;
+    }
+  });
+
+  Game.nav.position.x = Game.hero.mesh.position.x;
+  Game.nav.position.y = Game.hero.mesh.position.y;
+  Game.nav.lookAt(Game.target.mesh.position.clone().setZ(50));
+  Game.nav.rotateOnAxis(new THREE.Vector3(1,0,0), Math.PI / 2);
+
+  if (Game.hero.intersects(Game.target)) {
+    Game.target.teleport();
+    Game.score++;
+    document.getElementById('score').innerHTML = Game.score;
+    Game.obstacles.push(new Obstacle(Game.scene));
+  }
+
+  Game.renderer.render(Game.scene, Game.camera);
+  requestAnimationFrame(render);
+};
+
+export function start() {
   const w = window.innerWidth;
   const h = window.innerHeight;
 
@@ -83,53 +122,5 @@ Game.start = function() {
   };
 
   document.getElementById('webgl').appendChild(Game.renderer.domElement);
-  requestAnimationFrame(() => Game.render());
+  requestAnimationFrame(render);
 };
-
-Game.render = function() {
-  if (Game.keysDown[C.KEY_LEFT] || Game.keysDown['37']) {
-    Game.hero.turnLeft();
-  }
-  if (Game.keysDown[C.KEY_RIGHT] || Game.keysDown['39']) {
-    Game.hero.turnRight();
-  }
-  if (Game.keysDown[C.KEY_FORWARD] || Game.keysDown['38']) {
-    Game.hero.moveForward();
-  }
-  if (Game.keysDown[C.KEY_BACKWARD] || Game.keysDown['40']) {
-    Game.hero.moveBackward();
-  }
-
-  Game.obstacles.forEach((obstacle) => {
-    obstacle.move();
-    if (Game.hero.intersects(obstacle)) {
-      alert('Game Over!\nScore: ' + Game.score);
-      Game.obstacles.forEach((obstacle) => {
-        Game.scene.remove(obstacle.mesh);
-      });
-      Game.obstacles = [];
-      Game.keysDown = {};
-      Game.hero.mesh.position.set(0, 0, 0);
-      Game.target.teleport();
-      Game.score = 0;
-      document.getElementById('score').innerHTML = Game.score;
-    }
-  });
-
-  Game.nav.position.x = Game.hero.mesh.position.x;
-  Game.nav.position.y = Game.hero.mesh.position.y;
-  Game.nav.lookAt(Game.target.mesh.position.clone().setZ(50));
-  Game.nav.rotateOnAxis(new THREE.Vector3(1,0,0), Math.PI / 2);
-
-  if (Game.hero.intersects(Game.target)) {
-    Game.target.teleport();
-    Game.score++;
-    document.getElementById('score').innerHTML = Game.score;
-    Game.obstacles.push(new Obstacle(Game.scene));
-  }
-
-  Game.renderer.render(Game.scene, Game.camera);
-  requestAnimationFrame(() => Game.render());
-};
-
-export default Game;

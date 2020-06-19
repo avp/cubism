@@ -5,6 +5,9 @@
 import * as C from './constants.js';
 import {random} from './util.js';
 
+const ARENA_MIN = new THREE.Vector3(-C.ARENA_SIZE, -C.ARENA_SIZE, 0);
+const ARENA_MAX = new THREE.Vector3(C.ARENA_SIZE, C.ARENA_SIZE, 0);
+
 class Cube {
   constructor(scene, x, y, z, params) {
     const size = C.CUBE_SIZE;
@@ -21,9 +24,7 @@ class Cube {
    * Moves this cube to be inside the arena.
    */
   clamp() {
-    const min = new THREE.Vector3(-C.ARENA_SIZE, -C.ARENA_SIZE, 0);
-    const max = new THREE.Vector3(C.ARENA_SIZE, C.ARENA_SIZE, 0);
-    this.mesh.position.clamp(min, max);
+    this.mesh.position.clamp(ARENA_MIN, ARENA_MAX);
   };
 
   turnLeft() {
@@ -57,6 +58,7 @@ class Cube {
 
   /**
    * Returns true if this cube intersects with other, and false otherwise.
+   * FIXME: Do this correctly, this works OK for now.
    */
   intersects(other) {
     const c1 = {

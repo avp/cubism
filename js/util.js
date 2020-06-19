@@ -5,6 +5,6 @@
 export function random(min, max) {
   min = min || 0;
   max = max || 1;
-  var diff = max - min;
+  const diff = max - min;
   return (Math.random() * diff) + min;
 };
