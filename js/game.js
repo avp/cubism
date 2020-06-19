@@ -2,18 +2,18 @@
  * game.js: Main game code
  */
 
-import C from './constants.js';
+import * as C from './constants.js';
 import Cube from './cube.js';
 import Obstacle from './obstacle.js';
 
-var Game = {
+const Game = {
   keysDown: {},
   score: 0,
   obstacles: []
 };
 
-var initLights = function() {
-  var dirLight;
+function initLights() {
+  let dirLight;
   dirLight = new THREE.SpotLight(0xffffff);
   dirLight.position = new THREE.Vector3(1000, 1000, 10000);
   dirLight.intensity = 3;
@@ -39,8 +39,8 @@ var initLights = function() {
 };
 
 Game.start = function() {
-  var w = window.innerWidth;
-  var h = window.innerHeight;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
 
   Game.scene = new THREE.Scene();
   Game.camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 100000);
@@ -59,19 +59,19 @@ Game.start = function() {
   Game.target = new Cube(Game.scene, 0, 0, 0, {color: 0x000088});
   Game.target.teleport();
 
-  var navGeo = new THREE.CylinderGeometry(0, 1, 10, 20, false);
-  var navMat = new THREE.MeshPhongMaterial({color: 0x000088});
-  var nav = new THREE.Mesh(navGeo, navMat);
+  const navGeo = new THREE.CylinderGeometry(0, 1, 10, 20, false);
+  const navMat = new THREE.MeshPhongMaterial({color: 0x000088});
+  const nav = new THREE.Mesh(navGeo, navMat);
   nav.position.set(0, 0, 50);
   nav.lookAt(Game.target.mesh.position.clone().setZ(50));
   nav.rotateOnAxis(new THREE.Vector3(1,0,0), Math.PI / 2);
   Game.scene.add(nav);
   Game.nav = nav;
 
-  var floorGeo = new THREE.CubeGeometry(C.FLOOR_SIZE, C.FLOOR_SIZE, 0.1);
-  var floorMat = new THREE.MeshLambertMaterial({color: 0x010101});
+  const floorGeo = new THREE.CubeGeometry(C.FLOOR_SIZE, C.FLOOR_SIZE, 0.1);
+  const floorMat = new THREE.MeshLambertMaterial({color: 0x010101});
   floorMat.side = THREE.DoubleSide;
-  var floor = new THREE.Mesh(floorGeo, floorMat);
+  const floor = new THREE.Mesh(floorGeo, floorMat);
   floor.position.set(0, 0, -2.5);
   Game.scene.add(floor);
 
@@ -100,18 +100,11 @@ Game.render = function() {
     Game.hero.moveBackward();
   }
 
-  Game.obstacles.forEach(function(obstacle) {
+  Game.obstacles.forEach((obstacle) => {
     obstacle.move();
     if (Game.hero.intersects(obstacle)) {
-      ga('send', {
-        hitType: 'event',
-        eventCategory: 'Game',
-        eventAction: 'Game Over',
-        eventLabel: Game.score.toString(),
-        eventValue: Game.score
-      });
       alert('Game Over!\nScore: ' + Game.score);
-      Game.obstacles.forEach(function(obstacle) {
+      Game.obstacles.forEach((obstacle) => {
         Game.scene.remove(obstacle.mesh);
       });
       Game.obstacles = [];
