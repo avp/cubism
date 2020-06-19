@@ -5,7 +5,7 @@
 import * as C from './constants.js';
 import {random} from './util.js';
 
-class Obstacle {
+export default class Obstacle {
   constructor(scene) {
     const cubeGeo = new THREE.CubeGeometry(C.CUBE_SIZE, C.CUBE_SIZE, C.CUBE_SIZE);
     const cubeMat = new THREE.MeshLambertMaterial({color: 0xaa0000});
@@ -32,5 +32,3 @@ class Obstacle {
     }
   };
 }
-
-export default Obstacle;

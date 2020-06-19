@@ -8,7 +8,7 @@ import {random} from './util.js';
 const ARENA_MIN = new THREE.Vector3(-C.ARENA_SIZE, -C.ARENA_SIZE, 0);
 const ARENA_MAX = new THREE.Vector3(C.ARENA_SIZE, C.ARENA_SIZE, 0);
 
-class Cube {
+export default class Cube {
   constructor(scene, x, y, z, params) {
     const size = C.CUBE_SIZE;
     const cubeGeo = new THREE.CubeGeometry(size, size, size);
@@ -79,5 +79,3 @@ class Cube {
              c2.bottom > c1.top);
   };
 }
-
-export default Cube;
