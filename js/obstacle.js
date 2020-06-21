@@ -22,8 +22,8 @@ export default class Obstacle {
     this.direction = new THREE.Vector3(Math.random(), Math.random(), 0).normalize();
   }
 
-  move() {
-    this.mesh.translateOnAxis(this.direction, C.MOVE_SPEED);
+  move(elapsed) {
+    this.mesh.translateOnAxis(this.direction, C.MOVE_SPEED * elapsed);
     if (this.mesh.position.x < -C.ARENA_SIZE || this.mesh.position.x > C.ARENA_SIZE) {
       this.direction.setX(-this.direction.x);
     }

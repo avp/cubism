@@ -12,6 +12,7 @@ const Game = {
   obstacles: [],
   scene: null,
   renderer: null,
+  prevTime: null,
 };
 
 function initLights() {
@@ -21,32 +22,40 @@ function initLights() {
     new THREE.Vector3(-1000, 1000, 10000),
     new THREE.Vector3(-1000, -1000, 10000),
   ];
+  const origin = new THREE.Vector3(0, 0, 0);
   for (const pos of positions) {
     const dirLight = new THREE.SpotLight(0xffffff);
     dirLight.position = pos;
     dirLight.intensity = 3;
-    dirLight.lookAt(new THREE.Vector3(0, 0, 0));
+    dirLight.lookAt(origin);
     Game.scene.add(dirLight);
   }
   Game.scene.add(new THREE.AmbientLight(0x111111));
 };
 
-function render() {
-  if (Game.keysDown[C.KEY_LEFT] || Game.keysDown['37']) {
-    Game.hero.turnLeft();
+function render(curTime) {
+  if (Game.prevTime === null) {
+    Game.prevTime = curTime;
   }
-  if (Game.keysDown[C.KEY_RIGHT] || Game.keysDown['39']) {
-    Game.hero.turnRight();
+
+  const elapsed = curTime - Game.prevTime;
+  Game.prevTime = curTime;
+
+  if (Game.keysDown[C.KEY_LEFT] || Game.keysDown[37]) {
+    Game.hero.turnLeft(elapsed);
   }
-  if (Game.keysDown[C.KEY_FORWARD] || Game.keysDown['38']) {
-    Game.hero.moveForward();
+  if (Game.keysDown[C.KEY_RIGHT] || Game.keysDown[39]) {
+    Game.hero.turnRight(elapsed);
   }
-  if (Game.keysDown[C.KEY_BACKWARD] || Game.keysDown['40']) {
-    Game.hero.moveBackward();
+  if (Game.keysDown[C.KEY_FORWARD] || Game.keysDown[38]) {
+    Game.hero.moveForward(elapsed);
+  }
+  if (Game.keysDown[C.KEY_BACKWARD] || Game.keysDown[40]) {
+    Game.hero.moveBackward(elapsed);
   }
 
   for (const obstacle of Game.obstacles) {
-    obstacle.move();
+    obstacle.move(elapsed);
     if (Game.hero.intersects(obstacle)) {
       alert(`Game Over!\nScore: ${Game.score}`);
       for (const obs of Game.obstacles) {

@@ -7,6 +7,7 @@ import {random} from './util.js';
 
 const ARENA_MIN = new THREE.Vector3(-C.ARENA_SIZE, -C.ARENA_SIZE, 0);
 const ARENA_MAX = new THREE.Vector3(C.ARENA_SIZE, C.ARENA_SIZE, 0);
+const UP_VEC = new THREE.Vector3(0, 0, 1);
 
 export default class Cube {
   constructor(scene, x, y, z, params) {
@@ -27,23 +28,23 @@ export default class Cube {
     this.mesh.position.clamp(ARENA_MIN, ARENA_MAX);
   };
 
-  turnLeft() {
-    this.mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), C.TURN_RATE);
+  turnLeft(elapsed) {
+    this.mesh.rotateOnAxis(UP_VEC, C.TURN_RATE * elapsed);
     this.clamp();
   };
 
-  turnRight() {
-    this.mesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), -C.TURN_RATE);
+  turnRight(elapsed) {
+    this.mesh.rotateOnAxis(UP_VEC, -C.TURN_RATE * elapsed);
     this.clamp();
   };
 
-  moveForward() {
-    this.mesh.translateOnAxis(this.mesh.up, C.MOVE_SPEED);
+  moveForward(elapsed) {
+    this.mesh.translateOnAxis(this.mesh.up, C.MOVE_SPEED * elapsed);
     this.clamp();
   };
 
-  moveBackward() {
-    this.mesh.translateOnAxis(this.mesh.up, -C.MOVE_SPEED);
+  moveBackward(elapsed) {
+    this.mesh.translateOnAxis(this.mesh.up, -C.MOVE_SPEED * elapsed);
     this.clamp();
   };
 

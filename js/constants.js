@@ -2,8 +2,8 @@
  * constants.js - Game-level constants.
  */
 
-export const TURN_RATE = 0.06;
-export const MOVE_SPEED = 1;
+export const TURN_RATE = 0.003;
+export const MOVE_SPEED = 0.075;
 export const CUBE_SIZE = 5;
 
 export const ARENA_SIZE = 100;
