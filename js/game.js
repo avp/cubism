@@ -45,13 +45,13 @@ function render() {
     Game.hero.moveBackward();
   }
 
-  Game.obstacles.forEach((obstacle) => {
+  for (const obstacle of Game.obstacles) {
     obstacle.move();
     if (Game.hero.intersects(obstacle)) {
-      alert('Game Over!\nScore: ' + Game.score);
-      Game.obstacles.forEach((obstacle) => {
-        Game.scene.remove(obstacle.mesh);
-      });
+      alert(`Game Over!\nScore: ${Game.score}`);
+      for (const obs of Game.obstacles) {
+        Game.scene.remove(obs.mesh);
+      }
       Game.obstacles = [];
       Game.keysDown = {};
       Game.hero.mesh.position.set(0, 0, 0);
@@ -59,7 +59,7 @@ function render() {
       Game.score = 0;
       document.getElementById('score').innerHTML = Game.score;
     }
-  });
+  };
 
   Game.nav.position.x = Game.hero.mesh.position.x;
   Game.nav.position.y = Game.hero.mesh.position.y;
