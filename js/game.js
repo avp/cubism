@@ -86,7 +86,7 @@ function render(curTime) {
   requestAnimationFrame(render);
 };
 
-export function start() {
+function start() {
   const w = window.innerWidth;
   const h = window.innerHeight;
 
@@ -133,3 +133,5 @@ export function start() {
   document.getElementById('webgl').appendChild(Game.renderer.domElement);
   requestAnimationFrame(render);
 };
+
+start();

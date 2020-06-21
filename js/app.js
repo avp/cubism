@@ -1,6 +1,5 @@
 /*
- * app.js: Entry point - just start the game.
+ * app.js: Entry point - just start the game by running the script.
  */
 
-import {start} from './game.js';
-start();
+import './game.js';

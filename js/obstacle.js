@@ -25,10 +25,10 @@ export default class Obstacle {
   move(elapsed) {
     this.mesh.translateOnAxis(this.direction, C.MOVE_SPEED * elapsed);
     if (this.mesh.position.x < -C.ARENA_SIZE || this.mesh.position.x > C.ARENA_SIZE) {
-      this.direction.setX(-this.direction.x);
+      this.direction.x *= -1;
     }
     if (this.mesh.position.y < -C.ARENA_SIZE || this.mesh.position.y > C.ARENA_SIZE) {
-      this.direction.setY(-this.direction.y);
+      this.direction.y *= -1;
     }
   };
 }
