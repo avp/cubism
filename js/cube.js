@@ -1,9 +1,9 @@
 /**
-* cube.js - A basic cube object
-*/
+ * cube.js - A basic cube object
+ */
 
-import * as C from './constants.js';
-import {random} from './util.js';
+import * as C from "./constants.js";
+import { random } from "./util.js";
 
 const ARENA_MIN = new THREE.Vector3(-C.ARENA_SIZE, -C.ARENA_SIZE, 0);
 const ARENA_MAX = new THREE.Vector3(C.ARENA_SIZE, C.ARENA_SIZE, 0);
@@ -26,27 +26,27 @@ export default class Cube {
    */
   clamp() {
     this.mesh.position.clamp(ARENA_MIN, ARENA_MAX);
-  };
+  }
 
   turnLeft(elapsed) {
     this.mesh.rotateOnAxis(UP_VEC, C.TURN_RATE * elapsed);
     this.clamp();
-  };
+  }
 
   turnRight(elapsed) {
     this.mesh.rotateOnAxis(UP_VEC, -C.TURN_RATE * elapsed);
     this.clamp();
-  };
+  }
 
   moveForward(elapsed) {
     this.mesh.translateOnAxis(this.mesh.up, C.MOVE_SPEED * elapsed);
     this.clamp();
-  };
+  }
 
   moveBackward(elapsed) {
     this.mesh.translateOnAxis(this.mesh.up, -C.MOVE_SPEED * elapsed);
     this.clamp();
-  };
+  }
 
   /**
    * Moves the cube to a random space in the C.ARENA_SIZE.
@@ -55,7 +55,7 @@ export default class Cube {
     const x = random(-C.ARENA_SIZE, C.ARENA_SIZE);
     const y = random(-C.ARENA_SIZE, C.ARENA_SIZE);
     this.mesh.position.set(x, y, 0);
-  };
+  }
 
   /**
    * Returns true if this cube intersects with other, and false otherwise.
@@ -66,17 +66,19 @@ export default class Cube {
       left: this.mesh.position.x,
       right: this.mesh.position.x + this.mesh.geometry.width,
       bottom: this.mesh.position.y,
-      top: this.mesh.position.y + this.mesh.geometry.height
+      top: this.mesh.position.y + this.mesh.geometry.height,
     };
     const c2 = {
       left: other.mesh.position.x,
       right: other.mesh.position.x + other.mesh.geometry.width,
       bottom: other.mesh.position.y,
-      top: other.mesh.position.y + other.mesh.geometry.height
+      top: other.mesh.position.y + other.mesh.geometry.height,
     };
-    return !(c1.left > c2.right ||
-             c2.left > c1.right ||
-             c1.bottom > c2.top ||
-             c2.bottom > c1.top);
-  };
+    return !(
+      c1.left > c2.right ||
+      c2.left > c1.right ||
+      c1.bottom > c2.top ||
+      c2.bottom > c1.top
+    );
+  }
 }
