@@ -2,9 +2,9 @@
  * obstacle.js - The enemies of the game.
  */
 
-import * as C from "./constants.js";
-import Cube from "./cube.js";
-import { random } from "./util.js";
+import * as C from './constants.js';
+import Cube from './cube.js';
+import { random } from './util.js';
 
 export default class Obstacle extends Cube {
   constructor(scene) {

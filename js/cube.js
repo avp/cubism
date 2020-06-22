@@ -18,7 +18,13 @@ export default class Cube {
     const cube = new THREE.Mesh(cubeGeo, cubeMat);
     cube.position.set(x, y, z);
     scene.add(cube);
+    this.scene = scene;
     this.mesh = cube;
+  }
+
+  remove() {
+    this.scene.remove(this.mesh);
+    this.mesh = null;
   }
 
   /**

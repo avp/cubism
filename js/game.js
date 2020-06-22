@@ -2,9 +2,9 @@
  * game.js: Main game code
  */
 
-import * as C from "./constants.js";
-import Cube from "./cube.js";
-import Obstacle from "./obstacle.js";
+import * as C from './constants.js';
+import Cube from './cube.js';
+import Obstacle from './obstacle.js';
 
 const Game = {
   keysDown: {},
@@ -33,6 +33,18 @@ function initLights() {
   Game.scene.add(new THREE.AmbientLight(0x111111));
 }
 
+function reset() {
+  for (const obs of Game.obstacles) {
+    obs.remove();
+  }
+  Game.obstacles = [];
+  Game.keysDown = {};
+  Game.hero.mesh.position.set(0, 0, 0);
+  Game.target.teleport();
+  Game.score = 0;
+  document.getElementById('score').innerHTML = Game.score;
+}
+
 function render(curTime) {
   if (Game.prevTime === null) {
     Game.prevTime = curTime;
@@ -58,15 +70,7 @@ function render(curTime) {
     obstacle.move(elapsed);
     if (Game.hero.intersects(obstacle)) {
       alert(`Game Over!\nScore: ${Game.score}`);
-      for (const obs of Game.obstacles) {
-        Game.scene.remove(obs.mesh);
-      }
-      Game.obstacles = [];
-      Game.keysDown = {};
-      Game.hero.mesh.position.set(0, 0, 0);
-      Game.target.teleport();
-      Game.score = 0;
-      document.getElementById("score").innerHTML = Game.score;
+      reset();
     }
   }
 
@@ -78,7 +82,7 @@ function render(curTime) {
   if (Game.hero.intersects(Game.target)) {
     Game.target.teleport();
     Game.score++;
-    document.getElementById("score").innerHTML = Game.score;
+    document.getElementById('score').innerHTML = Game.score;
     Game.obstacles.push(new Obstacle(Game.scene));
   }
 
@@ -130,7 +134,8 @@ function start() {
     Game.keysDown[k.which] = false;
   };
 
-  document.getElementById("webgl").appendChild(Game.renderer.domElement);
+  document.getElementById('webgl').appendChild(Game.renderer.domElement);
+  reset();
   requestAnimationFrame(render);
 }
 
