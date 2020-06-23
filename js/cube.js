@@ -2,8 +2,8 @@
  * cube.js - A basic cube object
  */
 
-import * as C from "./constants.js";
-import { random } from "./util.js";
+import * as C from './constants.js';
+import { random } from './util.js';
 
 const ARENA_MIN = new THREE.Vector3(-C.ARENA_SIZE, -C.ARENA_SIZE, 0);
 const ARENA_MAX = new THREE.Vector3(C.ARENA_SIZE, C.ARENA_SIZE, 0);
@@ -16,6 +16,7 @@ export default class Cube {
     const cubeMat = new THREE.MeshLambertMaterial(params);
     cubeMat.side = THREE.DoubleSide;
     const cube = new THREE.Mesh(cubeGeo, cubeMat);
+    cube.geometry.computeBoundingBox();
     cube.position.set(x, y, z);
     scene.add(cube);
     this.scene = scene;
@@ -24,7 +25,6 @@ export default class Cube {
 
   remove() {
     this.scene.remove(this.mesh);
-    this.mesh = null;
   }
 
   /**
@@ -70,15 +70,15 @@ export default class Cube {
   intersects(other) {
     const c1 = {
       left: this.mesh.position.x,
-      right: this.mesh.position.x + this.mesh.geometry.width,
+      right: this.mesh.position.x + this.mesh.geometry.parameters.width,
       bottom: this.mesh.position.y,
-      top: this.mesh.position.y + this.mesh.geometry.height,
+      top: this.mesh.position.y + this.mesh.geometry.parameters.height,
     };
     const c2 = {
       left: other.mesh.position.x,
-      right: other.mesh.position.x + other.mesh.geometry.width,
+      right: other.mesh.position.x + other.mesh.geometry.parameters.width,
       bottom: other.mesh.position.y,
-      top: other.mesh.position.y + other.mesh.geometry.height,
+      top: other.mesh.position.y + other.mesh.geometry.parameters.height,
     };
     return !(
       c1.left > c2.right ||
@@ -86,5 +86,35 @@ export default class Cube {
       c1.bottom > c2.top ||
       c2.bottom > c1.top
     );
+  }
+
+  intersectingObjects(targets) {
+    const result = new Set();
+
+    let origin = new THREE.Vector3();
+    this.mesh.geometry.boundingBox.getCenter(origin);
+    origin = this.mesh.localToWorld(origin);
+
+    for (const v of this.mesh.geometry.vertices) {
+      const dir = this.mesh.localToWorld(v.clone()).sub(origin);
+      const caster = new THREE.Raycaster(
+        origin,
+        dir.normalize(),
+        0,
+        (C.CUBE_SIZE * 1.73) / 2.0
+      );
+      const ints = caster.intersectObjects(targets, false);
+      ints.forEach((o) => result.add(o.object));
+    }
+
+    return result;
+  }
+
+  raycast(...args) {
+    const result = this.mesh.raycast(...args);
+    if (result) {
+      result.object = this;
+    }
+    return result;
   }
 }

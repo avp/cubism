@@ -17,20 +17,17 @@ const Game = {
 
 function initLights() {
   const positions = [
-    new THREE.Vector3(1000, 1000, 10000),
-    new THREE.Vector3(1000, -1000, 10000),
-    new THREE.Vector3(-1000, 1000, 10000),
-    new THREE.Vector3(-1000, -1000, 10000),
+    [1000, 1000, 1000],
+    [1000, -1000, 1000],
+    [-1000, 1000, 1000],
+    [-1000, -1000, 1000],
   ];
-  const origin = new THREE.Vector3(0, 0, 0);
   for (const pos of positions) {
-    const dirLight = new THREE.SpotLight(0xffffff);
-    dirLight.position = pos;
-    dirLight.intensity = 3;
-    dirLight.lookAt(origin);
+    const dirLight = new THREE.SpotLight(0xeaeaea, 1);
+    dirLight.position.set(...pos);
     Game.scene.add(dirLight);
   }
-  Game.scene.add(new THREE.AmbientLight(0x111111));
+  Game.scene.add(new THREE.AmbientLight(0x101010));
 }
 
 function reset() {
@@ -66,24 +63,35 @@ function render(curTime) {
     Game.hero.moveBackward(elapsed);
   }
 
+
   for (const obstacle of Game.obstacles) {
     obstacle.move(elapsed);
-    if (Game.hero.intersects(obstacle)) {
-      alert(`Game Over!\nScore: ${Game.score}`);
-      reset();
-    }
   }
 
-  Game.nav.position.x = Game.hero.mesh.position.x;
-  Game.nav.position.y = Game.hero.mesh.position.y;
+  Game.nav.position.setX(Game.hero.mesh.position.x);
+  Game.nav.position.setY(Game.hero.mesh.position.y);
   Game.nav.lookAt(Game.target.mesh.position.clone().setZ(50));
   Game.nav.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
 
-  if (Game.hero.intersects(Game.target)) {
-    Game.target.teleport();
-    Game.score++;
-    document.getElementById('score').innerHTML = Game.score;
-    Game.obstacles.push(new Obstacle(Game.scene));
+  const intersections = Game.hero.intersectingObjects([
+    ...Game.obstacles,
+    Game.target,
+  ]);
+  if (intersections.size > 0) {
+    console.log(intersections);
+  }
+
+  for (const int of intersections) {
+    if (int === Game.target.mesh) {
+      Game.target.teleport();
+      Game.score++;
+      document.getElementById('score').innerHTML = Game.score;
+      Game.obstacles.push(new Obstacle(Game.scene));
+    } else {
+      console.log(int);
+      alert(`Game Over!\nScore: ${Game.score}`);
+      reset();
+    }
   }
 
   Game.renderer.render(Game.scene, Game.camera);
@@ -108,7 +116,7 @@ function start() {
   Game.hero = new Cube(Game.scene, 0, 0, 0, { color: 0x007700 });
   Game.hero.mesh.add(Game.camera);
 
-  Game.target = new Cube(Game.scene, 0, 0, 0, { color: 0x000088 });
+  Game.target = new Cube(Game.scene, 500, 500, 0, { color: 0x000088 });
   Game.target.teleport();
 
   const navGeo = new THREE.CylinderGeometry(0, 1, 10, 20, false);
@@ -121,7 +129,7 @@ function start() {
   Game.nav = nav;
 
   const floorGeo = new THREE.CubeGeometry(C.FLOOR_SIZE, C.FLOOR_SIZE, 0.1);
-  const floorMat = new THREE.MeshLambertMaterial({ color: 0x010101 });
+  const floorMat = new THREE.MeshLambertMaterial({ color: 0x101010 });
   floorMat.side = THREE.DoubleSide;
   const floor = new THREE.Mesh(floorGeo, floorMat);
   floor.position.set(0, 0, -2.5);
@@ -136,7 +144,7 @@ function start() {
 
   document.getElementById('webgl').appendChild(Game.renderer.domElement);
   reset();
-  requestAnimationFrame(render);
 }
 
 start();
+requestAnimationFrame(render);
